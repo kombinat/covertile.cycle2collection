@@ -1,6 +1,6 @@
-Introduction
-============
+covertile.cycle2collection
+==========================
 
 
-
-This product may contain traces of nuts.
+Similar to covertile.cycle2 but gets its items from a Collection.
+Uses Leadimage (collective leadimage or leadimage behavior) to show preview images.
