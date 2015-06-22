@@ -42,19 +42,19 @@ class ICycle2CollectionTile(ICollectionTile):
         default=u'0',
     )
 
+    form.omitted('horz_centered')
+    form.no_omit(ITileEditForm, 'horz_centered')
+    horz_centered = schema.Bool(
+        title=u"Horizontally centered",
+        required=False,
+    )
+
     form.omitted('more_link')
     form.no_omit(IDefaultConfigureForm, 'more_link')
-    form.order_after(more_link='image')
     more_link = schema.Text(
         title=u'More Link',
         required=False,
     )
-
-    # form.widget(
-    #    columns=TileTextLinesFieldWidget,
-    #    image_scale_dir=TileTextLinesFieldWidget,
-    #    timeout=TileTextLinesFieldWidget,
-    # )
 
 
 class Cycle2CollectionTile(CollectionTile):

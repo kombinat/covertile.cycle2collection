@@ -44,7 +44,8 @@
            tal:attributes="data-cycle-pager string:#navigator${view/id};
                            data-cycle-carousel-fluid python:cols > 1 and 'true' or None;
                            data-cycle-carousel-visible python:cols > 1 and cols or None;
-                           data-cycle-timeout view/timeout">
+                           data-cycle-timeout view/timeout;
+                           data-cycle-center-horz python:view.data.get('horz_centered') and 'true' or None">
         <div class="collection-item" tal:repeat="item results">
           <div class="collection-item-wrapper"
                tal:define="obj item/getObject;
