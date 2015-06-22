@@ -93,5 +93,4 @@ class Cycle2CollectionTile(CollectionTile):
 
     @property
     def timeout(self):
-        return self.get_tile_configuration().get('timeout', {}).get(
-            'text', '0')
+        return self.data.get('timeout', '0')
