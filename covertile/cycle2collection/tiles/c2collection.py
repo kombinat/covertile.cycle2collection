@@ -49,11 +49,29 @@ class ICycle2CollectionTile(ICollectionTile):
         required=False,
     )
 
+    form.omitted('fluid')
+    form.no_omit(ITileEditForm, 'fluid')
+    fluid = schema.Bool(
+        title=u"Fluid support",
+        required=False,
+    )
+
     form.omitted('more_link')
     form.no_omit(IDefaultConfigureForm, 'more_link')
     more_link = schema.Text(
         title=u'More Link',
         required=False,
+    )
+
+    form.omitted('column_css_class')
+    form.no_omit(IDefaultConfigureForm, 'column_css_class')
+    form.widget(column_css_class='collective.cover.tiles.' \
+        'configuration_widgets.cssclasswidget.CSSClassFieldWidget')
+    column_css_class = schema.Choice(
+        title=u"Column CSS Class",
+        required=False,
+        vocabulary='collective.cover.TileStyles',
+        default=u'tile-default',
     )
 
 
@@ -94,3 +112,9 @@ class Cycle2CollectionTile(CollectionTile):
     @property
     def timeout(self):
         return self.data.get('timeout', '0')
+
+    @property
+    def column_css_class(self):
+        # XXX fixme
+        tile_conf = self.get_tile_configuration()
+        return tile_conf.get('column_css_class', {}).values()[0][0]
