@@ -1,14 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="covertile.cycle2collection">
 
 <body tal:define="is_empty view/is_empty">
   <p tal:condition="python: is_empty and view.is_compose_mode()" i18n:translate="">
     Please drop a collection here to fill the tile.
   </p>
 
-  <div class="cover-cycle2-tile tile-content" tal:condition="not:is_empty">
+  <div class="cover-cycle2-collection-tile tile-content" tal:condition="not:is_empty">
     <tal:results define="results view/results|nothing;
                          toLocalizedTime nocall:context/@@plone/toLocalizedTime">
 
@@ -50,55 +51,49 @@
                             obj_title obj/Title;
                             obj_url obj/absolute_url">
             <div class="column-shadow">
-              <div class="collection-item-caption"
-                   tal:attributes="class python:'collection-item-caption%s' % (view.get_image_position() == 'right' and ' left' or '')">
-                <tal:fields repeat="field view/configured_fields">
-                  <tal:title define="htmltag python:field.get('htmltag', 'h1')"
-                             condition="python:field['id'] == 'title'">
-                      <tal:titletag replace="structure string:&lt;${htmltag}&gt;" />
-                          <a tal:attributes="href obj/absolute_url"
-                             tal:content="obj/Title" />
-                      <tal:titletagend replace="structure string:&lt;/${htmltag}&gt;" />
-                  </tal:title>
+              <tal:fields repeat="field view/configured_fields">
+                <tal:title define="htmltag python:field.get('htmltag', 'h1')"
+                           condition="python:field['id'] == 'title'">
+                    <tal:titletag replace="structure string:&lt;${htmltag}&gt;" />
+                        <a tal:attributes="href obj/absolute_url"
+                           tal:content="obj/Title" />
+                    <tal:titletagend replace="structure string:&lt;/${htmltag}&gt;" />
+                </tal:title>
 
-                  <p class="description"
-                     tal:condition="python:field['id'] == 'description'"
-                     tal:content="obj/Description" />
+                <p class="documentDescription caption-padding"
+                   tal:condition="python:field['id'] == 'description'"
+                   tal:content="obj/Description" />
 
-                  <p tal:condition="python:field['id'] == 'date'"
-                     tal:content="python:toLocalizedTime(view.Date(item), True)" />
+                <p class="caption-padding"
+                   tal:condition="python:field['id'] == 'date'"
+                   tal:content="python:toLocalizedTime(view.Date(item), True)" />
 
-                  <a tal:condition="python:field['id'] == 'more_link'"
-                     tal:attributes="href obj_url;
-                                     title obj_title"
-                     i18n:translate="">more ...</a>
+                <a class="caption-padding"
+                   tal:condition="python:field['id'] == 'more_link'"
+                   tal:attributes="href obj_url;
+                                   title obj_title"
+                   tal:content="view/data/footer">more ...</a>
 
-                </tal:fields>
-              </div>
-              <tal:image define="thumbnail python:view.thumbnail(obj);">
-                <a tal:attributes="href obj_url;
-                                   class view/get_image_position;">
-                  <img tal:condition="thumbnail"
-                       tal:attributes="src thumbnail/url;
-                                       width thumbnail/width;
-                                       height thumbnail/height;
-                                       alt obj_title;" />
-                  <img tal:condition="obj/image_resource|nothing"
-                       tal:attributes="src obj/image_resource"
-                       border="0" class="datastreamImage" />
-                </a>
-              </tal:image>
-              <div class="collection-item-tags"
-                   tal:define="item_tags obj/Subject"
-                   tal:condition="item_tags">
-                <abbr tal:omit-tag="python:len(item_tags) < 2"
-                      tal:attributes="title python:', '.join(item_tags)">
-                  <tal:block content="python:item_tags[0]" /><tal:block condition="python:len(item_tags) > 1" replace="string:, ..." />
-                </abbr>
-              </div>
+                <tal:if condition="python:field['id'] == 'image'">
+                  <tal:image define="thumbnail python:view.thumbnail(obj);">
+                    <a tal:attributes="href obj_url;
+                                       class view/get_image_position;">
+                      <img tal:condition="thumbnail"
+                           tal:attributes="src thumbnail/url;
+                                           width thumbnail/width;
+                                           height thumbnail/height;
+                                           alt obj_title;" />
+                      <img tal:condition="obj/image_resource|nothing"
+                           tal:attributes="src obj/image_resource"
+                           border="0" class="datastreamImage" />
+                    </a>
+                  </tal:image>
+                </tal:if>
+              </tal:fields>
               <span class="clearfix"></span>
             </div>
           </div>
+          <div class="visualClear"><!-- --></div>
         </div>
       </div>
       <div class="carousel-nav">
@@ -106,7 +101,9 @@
       </div>
 
       <div class="tile-footer" tal:condition="view/show_footer">
-        <a tal:attributes="href view/collection_url" tal:content="view/data/footer" />
+        <a tal:attributes="href view/collection_url">
+           <i class="fa fa-share" /> <span i18n:translate="label_collection_tile_show_all">show all</span>
+        </a>
       </div>
 
       <div class="visualClear"><!-- --></div>

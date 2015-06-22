@@ -4,28 +4,27 @@ Created on 16.6.2015
 @author: peterm
 '''
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from collective.cover.interfaces import ITileEditForm
 from collective.cover.tiles.collection import ICollectionTile, CollectionTile
 from collective.cover.tiles.configuration_view import IDefaultConfigureForm
-from plone import api
 from plone.autoform import directives as form
 from zope import schema
 from zope.interface.declarations import implements
-
-from .widgets import TileTextLinesFieldWidget
 
 
 class ICycle2CollectionTile(ICollectionTile):
     """ the same fields as Carousel tile """
 
     form.omitted('columns')
-    form.no_omit(IDefaultConfigureForm, 'columns')
+    form.no_omit(ITileEditForm, 'columns')
     columns = schema.TextLine(
         title=u"No. Columns",
+        description=u"How many items in one slide",
         required=False,
     )
 
     form.omitted('image_scale_dir')
-    form.no_omit(IDefaultConfigureForm, 'image_scale_dir')
+    form.no_omit(ITileEditForm, 'image_scale_dir')
     image_scale_dir = schema.TextLine(
         title=u"Image scale crop direction",
         description=u"Can be 'thumbnail' (uncropped) or 'down' (cropped)",
@@ -34,7 +33,7 @@ class ICycle2CollectionTile(ICollectionTile):
     )
 
     form.omitted('timeout')
-    form.no_omit(IDefaultConfigureForm, 'timeout')
+    form.no_omit(ITileEditForm, 'timeout')
     timeout = schema.TextLine(
         title=u"Timeout between slides",
         description=u"in milliseconds ... '0' means slider does not " \
@@ -51,11 +50,11 @@ class ICycle2CollectionTile(ICollectionTile):
         required=False,
     )
 
-    form.widget(
-        columns=TileTextLinesFieldWidget,
-        image_scale_dir=TileTextLinesFieldWidget,
-        timeout=TileTextLinesFieldWidget,
-    )
+    # form.widget(
+    #    columns=TileTextLinesFieldWidget,
+    #    image_scale_dir=TileTextLinesFieldWidget,
+    #    timeout=TileTextLinesFieldWidget,
+    # )
 
 
 class Cycle2CollectionTile(CollectionTile):
@@ -82,26 +81,15 @@ class Cycle2CollectionTile(CollectionTile):
                 else:
                     scale = scaleconf.split(' ')[0]
                 scales = item.restrictedTraverse('@@images')
-                crop_dir = tile_conf.get('image_scale_dir', {}).get('text') \
-                    or 'thumbnail'
+                crop_dir = self.data.get('image_scale_dir', 'thumbnail')
                 return scales.scale('image', scale, direction=crop_dir)
 
     @property
     def columns(self):
         try:
-            return int(self.get_tile_configuration().get(
-                'columns', {}).get('text'))
+            return int(self.data.get('columns', 1))
         except:
-            pass
-        return 1
-
-    @property
-    def col_width(self):
-        grid_setting = api.portal.get_registry_record(
-            'collective.cover.controlpanel.ICoverSettings.grid_system')
-        if grid_setting == 'col12grid':
-            return int(12 / self.columns)
-        return int(16 / self.columns)
+            return 1
 
     @property
     def timeout(self):
