@@ -5,7 +5,8 @@ Created on 16.6.2015
 '''
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from collective.cover.interfaces import ITileEditForm
-from collective.cover.tiles.collection import ICollectionTile, CollectionTile
+from collective.cover.tiles.collection import CollectionTile
+from collective.cover.tiles.collection import ICollectionTile
 from collective.cover.tiles.configuration_view import IDefaultConfigureForm
 from plone.autoform import directives as form
 from zope import schema

@@ -19,10 +19,6 @@
         </a>
       </div>
 
-      <div tal:condition="not:results">
-        <p i18n:translate="">The collection doesn't have any results.</p>
-      </div>
-
       <div class="tile-header" tal:condition="view/show_header">
           <tal:fields repeat="field view/configured_fields">
             <tal:title define="htmltag python:field.get('htmltag', 'h1')"
@@ -34,15 +30,20 @@
           </tal:fields>
       </div>
 
+       <div tal:condition="not:results">
+        <p i18n:translate="">The collection doesn't have any results.</p>
+      </div>
 
       <div class="cycle-slideshow cycle-autoinit"
            data-cycle-fx="carousel"
+           data-cycle-swipe="true"
            data-cycle-slides="> div"
            data-cycle-timeout="0"
            data-cycle-pager="#navigator"
+           tal:define="cols view/columns"
            tal:attributes="data-cycle-pager string:#navigator${view/id};
                            data-cycle-carousel-fluid python:view.data.get('fluid') and 'true' or None;
-                           data-cycle-carousel-visible view/columns;
+                           data-cycle-carousel-visible python:cols > 0 and cols or None;
                            data-cycle-timeout view/timeout;
                            data-cycle-center-horz python:view.data.get('horz_centered') and 'true' or None">
         <div class="collection-item" tal:repeat="item results">
