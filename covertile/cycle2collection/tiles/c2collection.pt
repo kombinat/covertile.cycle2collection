@@ -79,7 +79,7 @@
                   <tal:image define="thumbnail python:view.thumbnail(obj);">
                     <a tal:attributes="href obj_url;
                                        class view/get_image_position;">
-                      <img tal:condition="thumbnail"
+                      <img tal:condition="thumbnail/url|nothing"
                            tal:attributes="src thumbnail/url;
                                            width thumbnail/width;
                                            height thumbnail/height;

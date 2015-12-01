@@ -12,6 +12,11 @@ from plone.autoform import directives as form
 from zope import schema
 from zope.interface.declarations import implements
 
+try:
+    from collective.contentleadimage.config import IMAGE_FIELD_NAME
+except ImportError:
+    IMAGE_FIELD_NAME = "image"
+
 
 class ICycle2CollectionTile(ICollectionTile):
     """ the same fields as Carousel tile """
@@ -101,7 +106,8 @@ class Cycle2CollectionTile(CollectionTile):
                     scale = scaleconf.split(' ')[0]
                 scales = item.restrictedTraverse('@@images')
                 crop_dir = self.data.get('image_scale_dir', 'thumbnail')
-                return scales.scale('image', scale, direction=crop_dir)
+                return scales.scale(IMAGE_FIELD_NAME, scale,
+                    direction=crop_dir)
 
     @property
     def columns(self):
