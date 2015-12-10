@@ -40,10 +40,10 @@
            data-cycle-slides="> div"
            data-cycle-timeout="0"
            data-cycle-pager="#navigator"
-           tal:define="cols view/columns"
+           tal:define="cols view/columns|python:0"
            tal:attributes="data-cycle-pager string:#navigator${view/id};
                            data-cycle-carousel-fluid python:view.data.get('fluid') and 'true' or None;
-                           data-cycle-carousel-visible python:cols > 0 and cols or None;
+                           data-cycle-carousel-visible python:(len(results) > cols and cols) or len(results);
                            data-cycle-timeout view/timeout;
                            data-cycle-center-horz python:view.data.get('horz_centered') and 'true' or None">
         <div class="collection-item" tal:repeat="item results">
