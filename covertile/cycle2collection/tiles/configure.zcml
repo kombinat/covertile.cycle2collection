@@ -12,7 +12,7 @@
         name="covertile.cycle2.collection"
         title="Cycle2 Collection Tile"
         description="A tile showing Cycle2 based collection items."
-        icon="++resource++collective.cover/tile-carousel.png"
+        icon="++resource++collective.cover/img/tile-carousel.png"
         add_permission="cmf.ModifyPortalContent"
         schema=".c2collection.ICycle2CollectionTile"
         class=".c2collection.Cycle2CollectionTile"
