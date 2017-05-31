@@ -10,7 +10,7 @@ from collective.cover.tiles.collection import ICollectionTile
 from collective.cover.tiles.configuration_view import IDefaultConfigureForm
 from plone.autoform import directives as form
 from zope import schema
-from zope.interface.declarations import implements
+from zope.interface import implementer
 
 try:
     from collective.contentleadimage.config import IMAGE_FIELD_NAME
@@ -42,7 +42,7 @@ class ICycle2CollectionTile(ICollectionTile):
     form.no_omit(ITileEditForm, 'timeout')
     timeout = schema.TextLine(
         title=u"Timeout between slides",
-        description=u"in milliseconds ... '0' means slider does not " \
+        description=u"in milliseconds ... '0' means slider does not "
                     u"play automatically",
         required=False,
         default=u'0',
@@ -71,8 +71,7 @@ class ICycle2CollectionTile(ICollectionTile):
 
     form.omitted('column_css_class')
     form.no_omit(IDefaultConfigureForm, 'column_css_class')
-    form.widget(column_css_class='collective.cover.tiles.' \
-        'configuration_widgets.cssclasswidget.CSSClassFieldWidget')
+    form.widget(column_css_class='covertile.cycle2collection.tiles.widgets.ColumnCSSClassFieldWidget')  # noqa
     column_css_class = schema.Choice(
         title=u"Column CSS Class",
         required=False,
@@ -81,8 +80,9 @@ class ICycle2CollectionTile(ICollectionTile):
     )
 
 
+@implementer(ICycle2CollectionTile)
 class Cycle2CollectionTile(CollectionTile):
-    implements(ICycle2CollectionTile)
+
     index = ViewPageTemplateFile('c2collection.pt')
     short_name = u'Cycle2 Collection'
 
@@ -106,8 +106,8 @@ class Cycle2CollectionTile(CollectionTile):
                     scale = scaleconf.split(' ')[0]
                 scales = item.restrictedTraverse('@@images')
                 crop_dir = self.data.get('image_scale_dir', 'thumbnail')
-                return scales.scale(IMAGE_FIELD_NAME, scale,
-                    direction=crop_dir)
+                return scales.scale(
+                    IMAGE_FIELD_NAME, scale, direction=crop_dir)
 
     @property
     def columns(self):
@@ -122,6 +122,6 @@ class Cycle2CollectionTile(CollectionTile):
 
     @property
     def column_css_class(self):
-        # XXX fixme
         tile_conf = self.get_tile_configuration()
+        # ugly value translation
         return tile_conf.get('column_css_class', {}).values()[0][0]

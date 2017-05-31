@@ -1,24 +1,25 @@
+from collective.cover.tiles.configuration_widgets.cssclasswidget import CSSClassWidget  # noqa
+from z3c.form.browser import widget
+from z3c.form.interfaces import ISelectWidget
 from z3c.form.widget import FieldWidget
-from z3c.form.browser.textlines import TextLinesWidget
-from z3c.form.interfaces import IFieldWidget, ITextLinesWidget
-from zope.interface import implementer_only, implementer
+from zope.interface import implementer_only
 
 
-class ITileTextLinesWidget(ITextLinesWidget):
-    """ """
+class IColumnCSSClassWidget(ISelectWidget):
+    """ marker for column_css_class field """
 
 
-@implementer_only(ITileTextLinesWidget)
-class TileTextLinesWidget(TextLinesWidget):
-    """textlines widget implementation."""
+@implementer_only(IColumnCSSClassWidget)
+class ColumnCSSClassWidget(CSSClassWidget):
+
+    def update(self):
+        """See z3c.form.interfaces.IWidget."""
+        super(ColumnCSSClassWidget, self).update()
+        widget.addFieldClass(self)
+        # ugly value translation
+        if isinstance(self.context.get('column_css_class'), dict):
+            self.value = self.context.get('column_css_class').values()[0]
 
 
-@implementer(IFieldWidget)
-def TileTextLinesFieldWidget(field, source, request=None):
-    """IFieldWidget factory for SelectWidget."""
-    # BBB: emulate our pre-2.0 signature (field, request)
-    if request is None:
-        real_request = source
-    else:
-        real_request = request
-    return FieldWidget(field, TileTextLinesWidget(real_request))
+def ColumnCSSClassFieldWidget(field, request):
+    return FieldWidget(field, ColumnCSSClassWidget(request))
